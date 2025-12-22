@@ -15,4 +15,8 @@ extension UIView {
             self.alpha = 0
         }
     }
+    
+    func addSubviews(_ subView: UIView...) {
+        subView.forEach(addSubview)
+    }
 }
