@@ -24,5 +24,5 @@ extension ViewCodeProtocol {
 
     func setupConstraints() {}
 
-    func applyAdditionalChanges() {}
+    func setupAdditionalConfiguration() {}
 }
