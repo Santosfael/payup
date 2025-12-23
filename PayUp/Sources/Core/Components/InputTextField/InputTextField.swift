@@ -14,7 +14,7 @@ final class InputTextField: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        //label.font = Typography.titleSmall()
+        label.font = Typography.titleSmall()
         label.textColor = Colors.textHeading
         return label
     }()
@@ -24,7 +24,7 @@ final class InputTextField: UIView {
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.backgroundColor = Colors.backgroundTertiary
         textField.textColor = Colors.textLabel
-        //textField.font = Typography.paragraphMedium()
+        textField.font = Typography.paragraphMedium()
         textField.layer.cornerRadius = 8
         textField.layer.borderWidth = 1
         textField.layer.borderColor = Colors.borderPrimary.cgColor
