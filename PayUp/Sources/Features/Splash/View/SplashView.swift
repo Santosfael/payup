@@ -25,12 +25,13 @@ final class SplashView: UIView {
         return imageView
     }()
     
-    let exemple = InputTextField(title: "CNPJ", placeholder: "CNPJ", type: .cellphone)
+    let exemple = AuthenticationView()
     
     // MARK: Initializeds
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupView()
+        buildHierarchy()
+        setupAdditionalConfiguration()
     }
     
     required init?(coder: NSCoder) {
@@ -51,18 +52,25 @@ extension SplashView: ViewCodeProtocol {
         logoImageView.center = center
         logoImageView.bounds.size = CGSize(width: 132, height: 39)
         
-        exemple.frame = CGRect(x: 32, y: bounds.height - 200, width: bounds.width - 70, height: 60)
+        exemple.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            exemple.centerXAnchor.constraint(equalTo: centerXAnchor),
+            exemple.centerYAnchor.constraint(equalTo: centerYAnchor),
+            exemple.widthAnchor.constraint(equalToConstant: 343),
+            exemple.heightAnchor.constraint(equalToConstant: 606)
+        ])
     }
     
     func setupAdditionalConfiguration() {
+        backgroundColor = Colors.backgroundPrimary
+    }
+    
+    func buildHierarchy() {
         addSubviews(
             triangleImageView,
             logoImageView,
             exemple
         )
-    }
-    
-    func buildHierarchy() {
-        backgroundColor = Colors.backgroundPrimary
     }
 }

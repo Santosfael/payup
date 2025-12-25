@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Face ID Icon.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
