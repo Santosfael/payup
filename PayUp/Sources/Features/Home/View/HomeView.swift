@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HomeView: UIView {
+final class HomeView: UIView {
     
     // MARK: - UI Components
     private let logoImageView: UIImageView  = {
@@ -33,6 +33,12 @@ class HomeView: UIView {
         imageView.layer.cornerRadius = 22
         return imageView
     }()
+    
+    let daySelectorView: DaySelectorView = {
+        let daySelectorView = DaySelectorView()
+        daySelectorView.translatesAutoresizingMaskIntoConstraints = false
+        return daySelectorView
+    }()
 
     // MARK: - Initializeds
     override init(frame: CGRect) {
@@ -43,7 +49,6 @@ class HomeView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
 }
 
 // MARK: - Extension ViewCode Protocol
@@ -52,7 +57,8 @@ extension HomeView: ViewCodeProtocol {
     func buildHierarchy() {
         addSubviews(logoImageView,
                     bellButton,
-                    profileImageView)
+                    profileImageView,
+                    daySelectorView)
     }
     
     func setupConstraints() {
@@ -71,6 +77,11 @@ extension HomeView: ViewCodeProtocol {
             profileImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             profileImageView.widthAnchor.constraint(equalToConstant: 44),
             profileImageView.heightAnchor.constraint(equalToConstant: 44),
+            
+            daySelectorView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 55),
+            daySelectorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            daySelectorView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            daySelectorView.heightAnchor.constraint(equalToConstant: 32)
             
         ])
     }

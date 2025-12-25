@@ -7,8 +7,9 @@
 
 import UIKit
 
-class HomeViewController: UIViewController {
+final class HomeViewController: UIViewController {
     
+    private let viewModel = DaySelectorViewModel()
     private let homeView = HomeView()
     
     override func loadView() {
@@ -18,8 +19,17 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = true
-
-        // Do any additional setup after loading the view.
+        setupBindings()
     }
+    
+    private func setupBindings() {
+        homeView.daySelectorView.configure(days: viewModel.days,
+                                             selectedIndex: viewModel.selectedIndex)
+    }
+}
 
+extension HomeViewController: DaySelectorViewDelegate {
+    func daySelectorView(_ view: DaySelectorView, didSelectDayAt index: Int) {
+        viewModel.selectDay(at: index)
+    }
 }
