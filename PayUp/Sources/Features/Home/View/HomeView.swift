@@ -39,6 +39,21 @@ final class HomeView: UIView {
         daySelectorView.translatesAutoresizingMaskIntoConstraints = false
         return daySelectorView
     }()
+    
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Hoje"
+        label.font = Typography.titleSmall()
+        label.textColor = Colors.textHeading
+        return label
+    }()
+    
+    private let paymentCardView: PaymentCardView = {
+        let paymentCardView = PaymentCardView()
+        paymentCardView.translatesAutoresizingMaskIntoConstraints = false
+        return paymentCardView
+    }()
 
     // MARK: - Initializeds
     override init(frame: CGRect) {
@@ -58,7 +73,9 @@ extension HomeView: ViewCodeProtocol {
         addSubviews(logoImageView,
                     bellButton,
                     profileImageView,
-                    daySelectorView)
+                    daySelectorView,
+                    titleLabel,
+                    paymentCardView)
     }
     
     func setupConstraints() {
@@ -81,7 +98,14 @@ extension HomeView: ViewCodeProtocol {
             daySelectorView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 55),
             daySelectorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             daySelectorView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            daySelectorView.heightAnchor.constraint(equalToConstant: 32)
+            daySelectorView.heightAnchor.constraint(equalToConstant: 32),
+            
+            titleLabel.topAnchor.constraint(equalTo: daySelectorView.bottomAnchor, constant: 20),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            
+            paymentCardView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+            paymentCardView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            paymentCardView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             
         ])
     }

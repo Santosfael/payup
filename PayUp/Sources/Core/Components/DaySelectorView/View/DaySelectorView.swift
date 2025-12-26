@@ -64,7 +64,7 @@ final class DaySelectorView: UIView {
             
             var configuration = UIButton.Configuration.filled()
             configuration.title = day
-            configuration.baseBackgroundColor = Colors.backgroundPrimary
+            configuration.baseBackgroundColor = Colors.backgroundSecondary
             configuration.baseForegroundColor = Colors.textHeading
             configuration.attributedTitle = attributedTitle
             configuration.cornerStyle = .fixed
