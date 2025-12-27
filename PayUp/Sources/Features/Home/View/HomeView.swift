@@ -76,6 +76,11 @@ final class HomeView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    private func setupPaymentCard() {
+        let transactionModel = PaymentCardModel(type: .incoming, name: "Aurora Tech Soluções Digitais", cost: "R$ 250,00")
+        paymentCardView.configure(with: transactionModel)
+    }
 }
 
 // MARK: - Extension ViewCode Protocol
@@ -130,5 +135,6 @@ extension HomeView: ViewCodeProtocol {
     
     func setupAdditionalConfiguration() {
         backgroundColor = Colors.backgroundPrimary
+        setupPaymentCard()
     }
 }

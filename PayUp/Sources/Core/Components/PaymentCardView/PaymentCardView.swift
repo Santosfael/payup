@@ -19,7 +19,7 @@ final class PaymentCardView: UIView {
     }()
     
     private let iconImagemView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "calendarDollar"))
+        let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -27,7 +27,7 @@ final class PaymentCardView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "A receber"
+        // label.text = "A receber"
         label.font = Typography.paragraphSmall()
         label.textColor = Colors.textSpan
         return label
@@ -36,7 +36,7 @@ final class PaymentCardView: UIView {
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Aurora Tech Soluções Digitais"
+        // label.text = "Aurora Tech Soluções Digitais"
         label.font = Typography.titleSmall()
         label.textColor = Colors.textHeading
         return label
@@ -45,7 +45,7 @@ final class PaymentCardView: UIView {
     private let costLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "R$ 250,00"
+        // label.text = "R$ 250,00"
         label.font = Typography.paragraphMedium()
         label.textColor = Colors.textParagraph
         return label
@@ -62,9 +62,13 @@ final class PaymentCardView: UIView {
     }
 
     //MARK: - Internal method
-    func configure(description: String, cost: String) {
-        descriptionLabel.text = description
-        costLabel.text = cost
+    internal func configure(with model: PaymentCardModel) {
+        let image = UIImage(named: model.type.iconName)
+        
+        iconImagemView.image = image
+        titleLabel.text = model.type.title
+        descriptionLabel.text = model.name
+        costLabel.text = model.cost
     }
 }
 
