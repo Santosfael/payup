@@ -9,6 +9,12 @@ import UIKit
 
 final class HomeView: UIView {
     
+    let mockCompanies = [
+        CompanyItemModel(name: "Aurora Tech soluções Digitais"),
+        CompanyItemModel(name: "Veltrix Labs"),
+        CompanyItemModel(name: "Orbitum Tech")
+    ]
+    
     // MARK: - UI Components
     private let logoImageView: UIImageView  = {
         let imageView = UIImageView(image: UIImage(named: "mainLogo"))
@@ -54,6 +60,12 @@ final class HomeView: UIView {
         paymentCardView.translatesAutoresizingMaskIntoConstraints = false
         return paymentCardView
     }()
+    
+    lazy var companyListView: CompanyListView = {
+        let companyView = CompanyListView()
+        companyView.translatesAutoresizingMaskIntoConstraints = false
+        return companyView
+    }()
 
     // MARK: - Initializeds
     override init(frame: CGRect) {
@@ -75,7 +87,8 @@ extension HomeView: ViewCodeProtocol {
                     profileImageView,
                     daySelectorView,
                     titleLabel,
-                    paymentCardView)
+                    paymentCardView,
+                    companyListView)
     }
     
     func setupConstraints() {
@@ -106,6 +119,11 @@ extension HomeView: ViewCodeProtocol {
             paymentCardView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
             paymentCardView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             paymentCardView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            
+            companyListView.topAnchor.constraint(equalTo: paymentCardView.bottomAnchor, constant: 48),
+            companyListView.leadingAnchor.constraint(equalTo: paymentCardView.leadingAnchor),
+            companyListView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            companyListView.heightAnchor.constraint(equalToConstant: 200)
             
         ])
     }

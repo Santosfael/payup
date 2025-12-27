@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PaymentCardView: UIView {
+final class PaymentCardView: UIView {
 
     // MARK: - UI Components
     private let container: UIView = {
