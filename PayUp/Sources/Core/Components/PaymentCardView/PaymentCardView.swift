@@ -96,9 +96,11 @@ extension PaymentCardView: ViewCodeProtocol {
             
             titleLabel.topAnchor.constraint(equalTo: iconImagemView.topAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: iconImagemView.trailingAnchor, constant: 8),
+            titleLabel.heightAnchor.constraint(equalToConstant: 14),
             
             descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
             descriptionLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            descriptionLabel.heightAnchor.constraint(equalToConstant: 18),
             
             costLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 2),
             costLabel.leadingAnchor.constraint(equalTo: descriptionLabel.leadingAnchor),
