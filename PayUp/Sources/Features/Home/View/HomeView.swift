@@ -8,6 +8,9 @@
 import UIKit
 
 final class HomeView: UIView {
+
+    // MARK: - Clousure
+    var onTapAddClient: (() -> Void)?
     
     // MARK: - UI Components
     private let scrollView: UIScrollView = {
@@ -119,6 +122,7 @@ final class HomeView: UIView {
         NSLayoutConstraint.activate([
             button.heightAnchor.constraint(equalToConstant: 40)
         ])
+        button.addTarget(self, action: #selector(didTapAddClient), for: .touchUpInside)
         return button
     }()
     
@@ -220,7 +224,8 @@ final class HomeView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    // MARK: - Private Methods
     private func setupPaymentCard() {
         let transactionModel = PaymentCardModel(type: .incoming, name: "Aurora Tech Soluções Digitais", cost: "R$ 250,00")
         paymentCardView.configure(with: transactionModel)
@@ -229,6 +234,10 @@ final class HomeView: UIView {
     private func setupTransactionCard() {
         let transactionModel = PaymentCardModel(type: .transaction, name: "Duna Sport", cost: "R$ 450,00")
         transactionCardView.configure(with: transactionModel)
+    }
+
+    @objc private func didTapAddClient() {
+        onTapAddClient?()
     }
 }
 

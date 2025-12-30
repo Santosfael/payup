@@ -32,9 +32,17 @@ final class HomeViewController: UIViewController {
         homeView.daySelectorView.configure(days: viewModel.days,
                                              selectedIndex: viewModel.selectedIndex)
         homeView.companyListView.delegate = self
+        homeView.onTapAddClient = { [weak self] in
+            guard self != nil else { return }
+            let formViewController = ClientFormViewController(mode: .add)
+            formViewController.modalTransitionStyle = .coverVertical
+            formViewController.modalPresentationStyle = .overFullScreen
+            self?.present(formViewController, animated: true)
+        }
     }
 }
 
+// MARK: - Extension Custom Delegate DaySelector
 extension HomeViewController: DaySelectorViewDelegate {
     func daySelectorView(_ view: DaySelectorView, didSelectDayAt index: Int) {
         viewModel.selectDay(at: index)
