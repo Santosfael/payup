@@ -36,7 +36,7 @@ final class HomeViewController: UIViewController {
             guard self != nil else { return }
             let formViewController = ClientFormViewController(mode: .add)
             formViewController.modalTransitionStyle = .coverVertical
-            formViewController.modalPresentationStyle = .popover
+            formViewController.modalPresentationStyle = .overFullScreen
             self?.present(formViewController, animated: true)
         }
     }
