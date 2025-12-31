@@ -12,7 +12,7 @@ final class CompanyListView: UIView {
     //private let viewModel: CompanyViewModel
     
     private var companies: [CompanyItemModel] = []
-    weak var delegate: CompanyViewDelegate?
+    weak var delegate: CompanyListViewDelegate?
     
     // MARK: - UI Components
     private let listAllCompanyButton: UIButton = {
@@ -99,5 +99,10 @@ extension CompanyListView: UICollectionViewDataSource {
 extension CompanyListView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 128, height: 141)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let selectedCompany = delegate?.companyListView(self, companyAt: indexPath.item) else { return }
+        delegate?.didSelectCompany(selectedCompany)
     }
 }

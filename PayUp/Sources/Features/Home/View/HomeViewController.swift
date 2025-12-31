@@ -36,7 +36,7 @@ final class HomeViewController: UIViewController {
             guard self != nil else { return }
             let formViewController = ClientFormViewController(mode: .add)
             formViewController.modalTransitionStyle = .coverVertical
-            formViewController.modalPresentationStyle = .overFullScreen
+            formViewController.modalPresentationStyle = .popover
             self?.present(formViewController, animated: true)
         }
     }
@@ -49,7 +49,10 @@ extension HomeViewController: DaySelectorViewDelegate {
     }
 }
 
-extension HomeViewController: CompanyViewDelegate {
+extension HomeViewController: CompanyListViewDelegate {
+    func didSelectCompany(_ company: CompanyItemModel) {
+    }
+
     func numberOfCompanies(in view: CompanyListView) -> Int {
         companies.count
     }

@@ -129,4 +129,8 @@ extension InputTextField: ViewCodeProtocol {
             textfield.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
+    
+    func setupAdditionalConfiguration() {
+        self.heightAnchor.constraint(equalToConstant: 65).isActive = true
+    }
 }

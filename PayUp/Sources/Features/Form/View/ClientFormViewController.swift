@@ -11,8 +11,10 @@ final class ClientFormViewController: UIViewController {
     
     // MARK: - Variables
     private let mode: ClientFormMode
+    private let viewModel = DaySelectorViewModel()
     private var hasInitializedPosition = false
     private lazy var clientFormView = ClientFormView(mode: mode)
+    
 
     // MARK: - Initializeds
     init(mode: ClientFormMode) {
@@ -34,6 +36,8 @@ final class ClientFormViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         clientFormView.delegate = self
+        clientFormView.daySelectorView.configure(days: viewModel.days,
+                                                 selectedIndex: viewModel.selectedIndex)
     }
 
     override func viewDidLayoutSubviews() {
@@ -54,6 +58,25 @@ final class ClientFormViewController: UIViewController {
 
 // MARK: - Extension Custom Delegate ClientFormView
 extension ClientFormViewController: ClientFormViewDelegate {
+    func didTapSave() {
+        dismiss(animated: true)
+        // TODO: Implement saving logic here
+    }
+    
+    func didTapDelete() {
+        let alert = UIAlertController(title: "Excluir cliente",
+                                      message: "Tem certeza que deseja excluir este cliente",
+                                      preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Excluir", style: .destructive) { _ in
+            self.dismiss(animated: true)
+        })
+        
+        present(alert, animated: true)
+    }
+    
     func didTapCancel() {
+        dismiss(animated: true)
     }
 }

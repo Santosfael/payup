@@ -17,4 +17,13 @@ enum ClientFormMode {
             return "Editar cliente"
         }
     }
+    
+    var titleButton: String {
+        switch self {
+        case .add:
+            return "Salvar"
+        case .edit:
+            return "Salvar alterações"
+        }
+    }
 }
