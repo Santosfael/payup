@@ -39,6 +39,7 @@ final class DatePickerTextFieldView: UIView {
         textField.setLeftPaddingPoints(12)
         textField.rightViewMode = .always
         textField.rightView = self.calendarButton
+        textField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         return textField
     }()
     
@@ -92,6 +93,36 @@ final class DatePickerTextFieldView: UIView {
             viewController.present(alert, animated: true)
         }
     }
+
+    // MARK: Private Methods
+    private func maskDate() {
+        guard let text = valueTextField.text else { return }
+        
+        let cleanDate = text.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+        let mask = "##/##/####"
+        valueTextField.text = applyMask(mask: mask, to: cleanDate)
+    }
+
+    private func applyMask(mask: String, to value: String) -> String {
+        var result = ""
+        var index = value.startIndex
+        
+        for ch in mask where index < value.endIndex {
+            if (ch == "#") {
+                result.append(value[index])
+                index = value.index(after: index)
+            } else {
+                result.append(ch)
+            }
+        }
+        
+        return result
+    }
+
+    // MARK: - Private Objc Methods
+    @objc private func textDidChange() {
+        maskDate()
+    }
     
     // MARK: - Internal Method Manipulate TextField.text
     internal func getText() -> String? {
@@ -100,6 +131,25 @@ final class DatePickerTextFieldView: UIView {
     
     internal func setText(_ v: String) {
         valueTextField.text = v
+    }
+    
+    internal func validateCurrentDate() -> Bool {
+        guard let date = valueTextField.text else { return false }
+
+        let formatter = DateFormatter()
+            formatter.dateFormat = "dd/MM/yyyy"
+            formatter.locale = Locale(identifier: "pt_BR")
+            formatter.timeZone = TimeZone.current
+
+            guard let dataDigitada = formatter.date(from: date) else {
+                return false // formato inválido
+            }
+
+            let calendario = Calendar.current
+            let hoje = calendario.startOfDay(for: Date())
+            let dataDigitadaSemHora = calendario.startOfDay(for: dataDigitada)
+
+            return dataDigitadaSemHora >= hoje
     }
 }
 

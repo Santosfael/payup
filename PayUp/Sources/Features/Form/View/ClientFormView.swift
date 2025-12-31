@@ -271,7 +271,12 @@ final class ClientFormView: UIView {
     }
     
     @objc private func saveTapped() {
-        delegate?.didTapSave()
+        if (dateTextFieldView.validateCurrentDate() == true) {
+            delegate?.didTapSave()
+        } else {
+            print("Data inválida")
+            delegate?.didTapSave()
+        }
     }
     
     @objc private func deleteTapped() {
