@@ -37,12 +37,14 @@ final class InputTextField: UIView {
     // MARK: Initializeds
     init(title: String,
          placeholder: String,
-         type: InputTextFieldType = .normal) {
+         type: InputTextFieldType = .normal,
+         autoCaptalized: UITextAutocapitalizationType = .words) {
         self.type = type
         super.init(frame: .zero)
         setupView()
         setupTextFieldPlaceholder(placeholder: placeholder)
         self.titleLabel.text = title
+        textfield.autocapitalizationType = autoCaptalized
     }
     
     required init?(coder: NSCoder) {
@@ -107,6 +109,15 @@ final class InputTextField: UIView {
         let cleanCNPJ = text.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
         let mask = "##.###.###/####-##"
         textfield.text = applyMask(mask: mask, to: cleanCNPJ)
+    }
+
+    // MARK: - Internal Method Manipulate TextField.text
+    internal func getText() -> String? {
+        return textfield.text
+    }
+    
+    internal func setText(_ v: String) {
+        textfield.text = v
     }
 }
 

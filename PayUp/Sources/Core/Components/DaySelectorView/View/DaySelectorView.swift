@@ -53,6 +53,10 @@ final class DaySelectorView: UIView {
         updateSelection(index: selectedIndex)
     }
     
+    internal func getSelectedDay() -> Int? {
+        return delegate?.daySelected()
+    }
+    
     // MARK: - Privates Methods
     private func setupButtons() {
         horizontalStackView.arrangedSubviews.forEach {$0.removeFromSuperview() }

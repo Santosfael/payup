@@ -12,13 +12,17 @@ final class DatabaseManager {
     static let shared = DatabaseManager()
     private var db: OpaquePointer?
     
-    init() {
+    private init() {
         openDatabase()
         createTable()
     }
+    
+    deinit {
+        sqlite3_close(db)
+    }
 
     private func openDatabase() {
-        let fileURL = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        let fileURL = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent("payup.sql")
         
         if (sqlite3_open(fileURL?.path, &db) != SQLITE_OK) {
             print("unable to open db")
@@ -38,7 +42,7 @@ final class DatabaseManager {
                 due_date TEXT NOT NULL,
                 is_recurring INTEGER NOT NULL,
                 frequency TEXT NOT NULL,
-                selected_day INTEGER NOT NULL
+                selected_day INTEGER
             )
         """
         
@@ -47,20 +51,8 @@ final class DatabaseManager {
         }
     }
     
-    internal func saveClient(_ client: Client) {
-        let insertSQL = """
-        INSERT INTO clients(
-            name,
-            contact,
-            phone,
-            cnpj,
-            address,
-            value,
-            due_date,
-            is_recurring,
-            frequency,
-            selected_day) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """
+    internal func saveClient(_ client: Client) -> Bool {
+        let insertSQL = "INSERT INTO clients(name, contact, phone, cnpj, address, value, due_date, is_recurring, frequency, selected_day) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
         var statement: OpaquePointer?
         
         if (sqlite3_prepare_v2(db, insertSQL, -1, &statement, nil) == SQLITE_OK) {
@@ -79,8 +71,18 @@ final class DatabaseManager {
             } else {
                 sqlite3_bind_null(statement, 10)
             }
-            sqlite3_step(statement)
+            
+            if (sqlite3_step(statement) == SQLITE_DONE) {
+                sqlite3_finalize(statement)
+                return true
+            } else {
+                let errorMessage = String(cString: sqlite3_errmsg(db))
+                print("SQLite error message: ", errorMessage)
+            }
         }
+        
+        sqlite3_finalize(statement)
+        return false
     }
     
     internal func getAllClient() -> [Client] {

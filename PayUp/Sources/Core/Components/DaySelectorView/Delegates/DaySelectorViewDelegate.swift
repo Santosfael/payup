@@ -7,4 +7,5 @@
 
 protocol DaySelectorViewDelegate: AnyObject {
     func daySelectorView(_ view: DaySelectorView, didSelectDayAt index: Int)
+    func daySelected() -> Int?
 }

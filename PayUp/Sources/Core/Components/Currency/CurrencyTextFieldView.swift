@@ -74,6 +74,15 @@ final class CurrencyTextFieldView: UIView {
     internal func setText(_ v: String) {
         valueTextField.text = v
     }
+
+    internal func getValue() -> Double {
+        guard let text = valueTextField.text else { return 0.0 }
+        let cleanText = text.replacingOccurrences(of: "R$", with: "")
+            .replacingOccurrences(of: ",", with: ".")
+            .replacingOccurrences(of: " ", with: "")
+        
+        return Double(cleanText) ?? 0.0
+    }
 }
 
 // MARK: - Extension ViewCode

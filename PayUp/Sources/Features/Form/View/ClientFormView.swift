@@ -111,7 +111,7 @@ final class ClientFormView: UIView {
     
     private lazy var clientNameField = InputTextField(title: "Nome do cliente", placeholder: "Ex: João Silva | Loja do Bairro", type: .normal)
     
-    private lazy var contactField = InputTextField(title: "Contato", placeholder: "Ex: joao@email.com", type: .normal)
+    private lazy var contactField = InputTextField(title: "Contato", placeholder: "Ex: joao@email.com", type: .normal, autoCaptalized: .none)
     
     private lazy var phoneField = InputTextField(title: "Telefone", placeholder: "Ex: (11) 91234-5678", type: .cellphone)
 
@@ -236,6 +236,29 @@ final class ClientFormView: UIView {
             populateFieldsForEditMode()
         }
     }
+
+    private func getClientData() -> Client? {
+        guard let name = clientNameField.getText(), !name.isEmpty,
+              let contact = contactField.getText(), !contact.isEmpty,
+              let phone = phoneField.getText(), !phone.isEmpty,
+              let cnpj = cnpjField.getText(), !cnpj.isEmpty,
+              let address = addressField.getText(), !cnpj.isEmpty,
+              let dueDate = dateTextFieldView.getText(), !dueDate.isEmpty else { return nil }
+
+        let currency = currencyTextFieldView.getValue()
+        let selectedDay = delegate?.daySelected()
+        
+        return Client(name: name,
+                      contact: contact,
+                      phone: phone,
+                      cnpj: cnpj,
+                      address: address,
+                      value: currency,
+                      dueDate: dueDate,
+                      isRecurring: recurringSwitch.isOn,
+                      frequency: selectedFrequency,
+                      selectedDay: selectedDay)
+    }
     
     private func populateFieldsForEditMode() {}
     
@@ -264,18 +287,17 @@ final class ClientFormView: UIView {
             viewController.present(alert, animated: true)
         }
     }
-    
-    // MARK: - Objc Private Methods
+
     @objc private func cancelTapped() {
         delegate?.didTapCancel()
     }
     
     @objc private func saveTapped() {
         if (dateTextFieldView.validateCurrentDate() == true) {
-            delegate?.didTapSave()
+            delegate?.didTapSave(client: getClientData())
         } else {
             print("Data inválida")
-            delegate?.didTapSave()
+            //delegate?.didTapSave()
         }
     }
     

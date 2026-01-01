@@ -44,6 +44,10 @@ final class HomeViewController: UIViewController {
 
 // MARK: - Extension Custom Delegate DaySelector
 extension HomeViewController: DaySelectorViewDelegate {
+    func daySelected() -> Int? {
+        return viewModel.getSelectedDay()
+    }
+    
     func daySelectorView(_ view: DaySelectorView, didSelectDayAt index: Int) {
         viewModel.selectDay(at: index)
     }

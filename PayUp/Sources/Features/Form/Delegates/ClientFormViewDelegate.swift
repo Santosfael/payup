@@ -7,6 +7,7 @@
 
 protocol ClientFormViewDelegate: AnyObject {
     func didTapCancel()
-    func didTapSave()
+    func didTapSave(client: Client?)
     func didTapDelete()
+    func daySelected() -> Int?
 }

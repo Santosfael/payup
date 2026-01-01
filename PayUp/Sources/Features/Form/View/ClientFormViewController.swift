@@ -12,6 +12,7 @@ final class ClientFormViewController: UIViewController {
     // MARK: - Variables
     private let mode: ClientFormMode
     private let viewModel = DaySelectorViewModel()
+    private let clientViewModel = ClientFormViewModel()
     private var hasInitializedPosition = false
     private lazy var clientFormView = ClientFormView(mode: mode)
     
@@ -54,13 +55,34 @@ final class ClientFormViewController: UIViewController {
             self.clientFormView.containerView.transform = .identity
         }
     }
+    
+    // MARK: - Private Methods
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        
+        present(alert, animated: true)
+    }
 }
 
 // MARK: - Extension Custom Delegate ClientFormView
 extension ClientFormViewController: ClientFormViewDelegate {
-    func didTapSave() {
-        dismiss(animated: true)
-        // TODO: Implement saving logic here
+    func daySelected() -> Int? {
+        return viewModel.getSelectedDay()
+    }
+    
+    func didTapSave(client: Client?) {
+        guard let client = client else {
+            showAlert(title: "Erro", message: "Dados inseridos incorretamente, tente novamente")
+            return
+        }
+        let success = clientViewModel.saveClient(client: client)
+        
+        if success {
+            dismiss(animated: true)
+        } else {
+            showAlert(title: "Erro", message: "Não foi possível salvar os dados do cliente, tente novamente!")
+        }
     }
     
     func didTapDelete() {
