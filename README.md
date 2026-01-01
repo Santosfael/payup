@@ -36,6 +36,7 @@ Este projeto é construído utilizando as seguintes tecnologias e padrões:
 *   **Interface:** UIKit
 *   **Arquitetura:** Model-View-ViewModel (MVVM)
 *   **Layout:** ViewCode (construção de UI programaticamente, sem Storyboards)
+*   **Persistência de Dados:** SQLite para armazenamento local.
 *   **Fonte Customizada:** K2D (Regular, SemiBold, Bold)
 
 A estrutura do projeto segue uma abordagem componentizada, separando a lógica em `Core` (componentes reutilizáveis, extensões) e `Features` (módulos de funcionalidades específicas como Home, Formulário, etc.).
