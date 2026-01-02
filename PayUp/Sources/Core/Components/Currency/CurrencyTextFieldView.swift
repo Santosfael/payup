@@ -67,14 +67,6 @@ final class CurrencyTextFieldView: UIView {
     }
     
     // MARK: - Internal Method Manipulate TextField.text
-    internal func getText() -> String? {
-        return valueTextField.text
-    }
-    
-    internal func setText(_ v: String) {
-        valueTextField.text = v
-    }
-
     internal func getValue() -> Double {
         guard let text = valueTextField.text else { return 0.0 }
         let cleanText = text.replacingOccurrences(of: "R$", with: "")
@@ -82,6 +74,14 @@ final class CurrencyTextFieldView: UIView {
             .replacingOccurrences(of: " ", with: "")
         
         return Double(cleanText) ?? 0.0
+    }
+
+    internal func setValue(_ value: Double) {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = "BRL"
+        formatter.locale = Locale(identifier: "pt_BR")
+        valueTextField.text = formatter.string(from: NSNumber(value: value)) ?? "R$ 0,00"
     }
 }
 

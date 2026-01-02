@@ -11,4 +11,5 @@ protocol CompanyListViewDelegate: AnyObject {
     func numberOfCompanies(in view: CompanyListView) -> Int
     func companyListView(_ view: CompanyListView, companyAt index: Int) -> CompanyItemModel
     func didSelectCompany(_ company: CompanyItemModel)
+    func didUpdateCompany()
 }

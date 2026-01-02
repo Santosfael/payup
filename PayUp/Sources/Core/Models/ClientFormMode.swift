@@ -7,7 +7,7 @@
 
 enum ClientFormMode {
     case add
-    case edit
+    case edit(Client)
     
     var title: String {
         switch self {

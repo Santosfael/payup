@@ -19,6 +19,7 @@ final class HomeViewController: UIViewController {
         CompanyItemModel(name: "Orbitum Tech")
     ]
     
+    // MARK: - Life Cycle
     override func loadView() {
         view = homeView
     }
@@ -27,12 +28,17 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = true
         setupBindings()
-        //loadData()
+        setupCompanyListDelegate()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //loadData()
+        
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        homeView.reloadCompanyList()
     }
 
     // MARK: - Private Methods
@@ -48,6 +54,10 @@ final class HomeViewController: UIViewController {
             self?.present(formViewController, animated: true)
         }
     }
+
+    private func setupCompanyListDelegate() {
+        homeView.setCompanyListDelegate(self)
+    }
 }
 
 // MARK: - Extension Custom Delegate DaySelector
@@ -62,7 +72,18 @@ extension HomeViewController: DaySelectorViewDelegate {
 }
 
 extension HomeViewController: CompanyListViewDelegate {
+    func didUpdateCompany() {
+        homeView.companyListView.collectionView.reloadData()
+    }
+    
     func didSelectCompany(_ company: CompanyItemModel) {
+        guard let client =  homeViewModel.getClient(company.name) else { return }
+        
+        let formViewController = ClientFormViewController(mode: .edit(client))
+        formViewController.delegate = self
+        formViewController.modalTransitionStyle = .coverVertical
+        formViewController.modalPresentationStyle = .overFullScreen
+        self.present(formViewController, animated: true)
     }
 
     func numberOfCompanies(in view: CompanyListView) -> Int {

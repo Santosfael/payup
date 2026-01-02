@@ -50,34 +50,49 @@ final class DatabaseManager {
             print("Unable create the table")
         }
     }
-    
+
     internal func saveClient(_ client: Client) -> Bool {
+        if let _ = client.id {
+            return updateClient(client)
+        } else {
+            return insertClient(client)
+        }
+    }
+    
+    private func insertClient(_ client: Client) -> Bool {
         let insertSQL = "INSERT INTO clients(name, contact, phone, cnpj, address, value, due_date, is_recurring, frequency, selected_day) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
         var statement: OpaquePointer?
         
         if (sqlite3_prepare_v2(db, insertSQL, -1, &statement, nil) == SQLITE_OK) {
-            sqlite3_bind_text(statement, 1, NSString(string: client.name).utf8String, -1, nil)
-            sqlite3_bind_text(statement, 2, NSString(string: client.contact).utf8String, -1, nil)
-            sqlite3_bind_text(statement, 3, NSString(string: client.phone).utf8String, -1, nil)
-            sqlite3_bind_text(statement, 4, NSString(string: client.cnpj).utf8String, -1, nil)
-            sqlite3_bind_text(statement, 5, NSString(string: client.address).utf8String, -1, nil)
-            sqlite3_bind_double(statement, 6, client.value)
-            sqlite3_bind_text(statement, 7, NSString(string: client.dueDate).utf8String, -1, nil)
-            sqlite3_bind_int(statement, 8, client.isRecurring ? 1 : 0)
-            sqlite3_bind_text(statement, 9, NSString(string: client.frequency).utf8String, -1, nil)
-            
-            if let day = client.selectedDay {
-                sqlite3_bind_int(statement, 10, Int32(day))
-            } else {
-                sqlite3_bind_null(statement, 10)
-            }
-            
+            bindClientData(statement: statement, client: client, includeId: false)
+
             if (sqlite3_step(statement) == SQLITE_DONE) {
                 sqlite3_finalize(statement)
                 return true
             } else {
                 let errorMessage = String(cString: sqlite3_errmsg(db))
                 print("SQLite error message: ", errorMessage)
+            }
+        }
+        
+        sqlite3_finalize(statement)
+        return false
+    }
+
+    private func updateClient(_ client: Client) -> Bool {
+        guard let clientId = client.id else { return false }
+        
+        let updateSQL = "UPDATE clients SET name = ?, contact = ?, phone = ?, cnpj = ?, address = ?, value = ?, due_date = ?, is_recurring = ?, frequency = ?, selected_day = ? WHERE id = ?"
+        
+        var statement: OpaquePointer?
+        
+        if ( sqlite3_prepare_v2(db, updateSQL, -1, &statement, nil) == SQLITE_OK) {
+            bindClientData(statement: statement, client: client, includeId: false)
+            sqlite3_bind_int(statement, 11, Int32(clientId))
+            
+            if (sqlite3_step(statement) == SQLITE_DONE) {
+                sqlite3_finalize(statement)
+                return true
             }
         }
         
@@ -176,5 +191,25 @@ final class DatabaseManager {
         }
         sqlite3_finalize(statement)
         return false
+    }
+
+    private func bindClientData(statement: OpaquePointer?, client: Client, includeId: Bool) {
+        let startIndex = includeId ? 2 : 1
+        
+        sqlite3_bind_text(statement, Int32(startIndex), NSString(string: client.name).utf8String, -1, nil)
+        sqlite3_bind_text(statement, Int32(startIndex + 1), NSString(string: client.contact).utf8String, -1, nil)
+        sqlite3_bind_text(statement, Int32(startIndex + 2), NSString(string: client.phone).utf8String, -1, nil)
+        sqlite3_bind_text(statement, Int32(startIndex + 3), NSString(string: client.cnpj).utf8String, -1, nil)
+        sqlite3_bind_text(statement, Int32(startIndex + 4), NSString(string: client.address).utf8String, -1, nil)
+        sqlite3_bind_double(statement, Int32(startIndex + 5), client.value)
+        sqlite3_bind_text(statement, Int32(startIndex + 6), NSString(string: client.dueDate).utf8String, -1, nil)
+        sqlite3_bind_int(statement, Int32(startIndex  + 7), client.isRecurring ? 1 : 0)
+        sqlite3_bind_text(statement, Int32(startIndex  + 8), NSString(string: client.frequency).utf8String, -1, nil)
+        
+        if let day = client.selectedDay {
+            sqlite3_bind_int(statement, Int32(startIndex  + 9), Int32(day))
+        } else {
+            sqlite3_bind_null(statement, Int32(startIndex  + 9))
+        }
     }
 }

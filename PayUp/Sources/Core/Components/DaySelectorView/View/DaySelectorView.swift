@@ -56,6 +56,10 @@ final class DaySelectorView: UIView {
     internal func getSelectedDay() -> Int? {
         return delegate?.daySelected()
     }
+
+    internal func setSelectedDay(_ day: Int) {
+        delegate?.daySelectorView(self, didSelectDayAt: day)
+    }
     
     // MARK: - Privates Methods
     private func setupButtons() {

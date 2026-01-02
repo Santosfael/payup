@@ -15,6 +15,7 @@ final class ClientFormViewController: UIViewController {
     private let clientViewModel = ClientFormViewModel()
     private var hasInitializedPosition = false
     private lazy var clientFormView = ClientFormView(mode: mode)
+    weak var delegate: CompanyListViewDelegate?
     
 
     // MARK: - Initializeds
@@ -80,6 +81,7 @@ extension ClientFormViewController: ClientFormViewDelegate {
         
         if success {
             dismiss(animated: true)
+            delegate?.didUpdateCompany()
         } else {
             showAlert(title: "Erro", message: "Não foi possível salvar os dados do cliente, tente novamente!")
         }

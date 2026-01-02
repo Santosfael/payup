@@ -139,6 +139,7 @@ final class ClientFormView: UIView {
         button.backgroundColor = Colors.accentBrand
         button.layer.cornerRadius = 6
         button.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        button.widthAnchor.constraint(equalToConstant: 152).isActive = true
         return button
     }()
     
@@ -160,16 +161,18 @@ final class ClientFormView: UIView {
     }()
     
     private lazy var buttonsStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [
-            cancelButton,
-            saveButton
-        ])
-        if mode == .edit {
+        let stackView = UIStackView()
+        switch mode {
+        case .add:
+            stackView.addArrangedSubview(cancelButton)
+            stackView.addArrangedSubview(saveButton)
+        case .edit(_):
             stackView.addArrangedSubview(deleteButton)
+            stackView.addArrangedSubview(cancelButton)
+            stackView.addArrangedSubview(saveButton)
         }
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
         stackView.spacing = 12
         return stackView
     }()
@@ -232,8 +235,11 @@ final class ClientFormView: UIView {
         daySelectorView.isHidden = !recurringSwitch.isOn
         frequencyButton.isHidden = !recurringSwitch.isOn
         
-        if mode == .edit {
-            populateFieldsForEditMode()
+        switch mode {
+        case .add:
+            break
+        case .edit(let client):
+            populateFieldsForEditMode(client: client)
         }
     }
 
@@ -248,7 +254,17 @@ final class ClientFormView: UIView {
         let currency = currencyTextFieldView.getValue()
         let selectedDay = delegate?.daySelected()
         
-        return Client(name: name,
+        var clientId: Int?
+        
+        switch mode {
+        case .add:
+            clientId = nil
+        case .edit(let client):
+            clientId = client.id
+        }
+        
+        return Client(id: clientId,
+                      name: name,
                       contact: contact,
                       phone: phone,
                       cnpj: cnpj,
@@ -260,7 +276,22 @@ final class ClientFormView: UIView {
                       selectedDay: selectedDay)
     }
     
-    private func populateFieldsForEditMode() {}
+    private func populateFieldsForEditMode(client: Client) {
+        clientNameField.setText(client.name)
+        contactField.setText(client.contact)
+        phoneField.setText(client.phone)
+        cnpjField.setText(client.cnpj)
+        addressField.setText(client.address)
+        currencyTextFieldView.setValue(client.value)
+        dateTextFieldView.setText(client.dueDate)
+        recurringSwitch.isOn = client.isRecurring
+        selectedFrequency = client.frequency
+        frequencyButton.setTitle(client.frequency, for: .normal)
+        
+        if let selectedDay = client.selectedDay {
+            daySelectorView.setSelectedDay(selectedDay)
+        }
+    }
     
     // MARK: - Objc private Methods
     @objc private func recurringToggled() {
@@ -336,10 +367,13 @@ extension ClientFormView: ViewCodeProtocol {
             recurringStackView.topAnchor.constraint(equalTo: recurringContainerView.topAnchor),
             recurringStackView.leadingAnchor.constraint(equalTo: recurringContainerView.leadingAnchor),
             recurringStackView.trailingAnchor.constraint(equalTo: recurringContainerView.trailingAnchor),
-            recurringStackView.bottomAnchor.constraint(equalTo: recurringContainerView.bottomAnchor),
+            recurringStackView.bottomAnchor.constraint(equalTo: recurringContainerView.bottomAnchor)
         ])
         
-        if mode == .edit {
+        switch mode {
+        case .add:
+            break
+        case .edit(_):
             NSLayoutConstraint.activate([
                 deleteButton.widthAnchor.constraint(equalToConstant: 40),
                 deleteButton.heightAnchor.constraint(equalToConstant: 40)

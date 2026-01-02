@@ -239,6 +239,14 @@ final class HomeView: UIView {
     @objc private func didTapAddClient() {
         onTapAddClient?()
     }
+
+    internal func setCompanyListDelegate(_ delegate: CompanyListViewDelegate) {
+        companyListView.delegate = delegate
+    }
+
+    internal func reloadCompanyList() {
+        companyListView.collectionView.reloadData()
+    }
 }
 
 // MARK: - Extension ViewCode Protocol

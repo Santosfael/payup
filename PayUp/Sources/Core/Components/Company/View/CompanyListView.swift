@@ -25,7 +25,7 @@ final class CompanyListView: UIView {
         return button
     }()
 
-    private lazy var collectionView: UICollectionView = {
+    internal lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 12
