@@ -11,6 +11,7 @@ final class HomeViewController: UIViewController {
     
     private let viewModel = DaySelectorViewModel()
     private let homeView = HomeView()
+    private let homeViewModel = HomeViewModel()
     
     private let companies = [
         CompanyItemModel(name: "Aurora Tech soluções Digitais"),
@@ -26,8 +27,15 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = true
         setupBindings()
+        //loadData()
     }
-    
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        //loadData()
+    }
+
+    // MARK: - Private Methods
     private func setupBindings() {
         homeView.daySelectorView.configure(days: viewModel.days,
                                              selectedIndex: viewModel.selectedIndex)
@@ -58,11 +66,12 @@ extension HomeViewController: CompanyListViewDelegate {
     }
 
     func numberOfCompanies(in view: CompanyListView) -> Int {
-        companies.count
+        homeViewModel.getCompanyModelsFormClients().count
     }
     
     func companyListView(_ view: CompanyListView, companyAt index: Int) -> CompanyItemModel {
-        companies[index]
+        let clients = homeViewModel.getCompanyModelsFormClients()
+        return clients[index]
     }
     
     
