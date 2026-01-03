@@ -29,16 +29,7 @@ final class HomeViewController: UIViewController {
         navigationController?.navigationBar.isHidden = true
         setupBindings()
         setupCompanyListDelegate()
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        homeView.reloadCompanyList()
+        setNotificationObserver()
     }
 
     // MARK: - Private Methods
@@ -58,11 +49,26 @@ final class HomeViewController: UIViewController {
     private func setupCompanyListDelegate() {
         homeView.setCompanyListDelegate(self)
     }
+
+    private func setNotificationObserver() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleClientDataChanged),
+                                               name: .clientDataChanged,
+                                               object: nil)
+    }
+
+    @objc private func handleClientDataChanged() {
+        homeView.companyListView.collectionView.reloadData()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 }
 
 // MARK: - Extension Custom Delegate DaySelector
 extension HomeViewController: DaySelectorViewDelegate {
-    func daySelected() -> Int? {
+    func selectedDay() -> Int? {
         return viewModel.getSelectedDay()
     }
     
@@ -72,15 +78,11 @@ extension HomeViewController: DaySelectorViewDelegate {
 }
 
 extension HomeViewController: CompanyListViewDelegate {
-    func didUpdateCompany() {
-        homeView.companyListView.collectionView.reloadData()
-    }
-    
+
     func didSelectCompany(_ company: CompanyItemModel) {
         guard let client =  homeViewModel.getClient(company.name) else { return }
         
         let formViewController = ClientFormViewController(mode: .edit(client))
-        formViewController.delegate = self
         formViewController.modalTransitionStyle = .coverVertical
         formViewController.modalPresentationStyle = .overFullScreen
         self.present(formViewController, animated: true)

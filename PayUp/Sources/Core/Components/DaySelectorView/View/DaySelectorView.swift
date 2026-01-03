@@ -38,7 +38,6 @@ final class DaySelectorView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
-        
     }
     
     required init?(coder: NSCoder) {
@@ -50,11 +49,11 @@ final class DaySelectorView: UIView {
         self.days = days
         self.selectedIndex = selectedIndex
         setupButtons()
-        updateSelection(index: selectedIndex)
+        updateSelection(index: getSelectedDay() ?? selectedIndex)
     }
     
     internal func getSelectedDay() -> Int? {
-        return delegate?.daySelected()
+        return delegate?.selectedDay()
     }
 
     internal func setSelectedDay(_ day: Int) {

@@ -14,24 +14,18 @@ final class DaySelectorViewModel {
     private let calendar = Calendar.current
     
     // MARK: - Variables
-    private var currentSelectedIndex: Int
+    var selectedIndex: Int
     var onDaySelected : ((Int) -> Void)?
-    
-    var selectedIndex: Int {
-        let weekDay = calendar.component(.weekday, from: Date())
-        return (weekDay + 5) % 7
-    }
     
     // MARK: - Initialized
     init() {
         let weekDay = calendar.component(.weekday, from: Date())
-        currentSelectedIndex = (weekDay + 5) % 7
+        self.selectedIndex = (weekDay + 5) % 7
     }
     
-   
     // MARK: - Internal Methods
     internal func selectDay(at index: Int) {
-        currentSelectedIndex = index
+        self.selectedIndex = index
         onDaySelected?(index)
     }
 
@@ -40,7 +34,7 @@ final class DaySelectorViewModel {
     }
 
     internal func setSelectDay(_ day: Int) {
-        currentSelectedIndex = day - 1
-        onDaySelected?(currentSelectedIndex)
+        self.selectedIndex = day - 1
+        onDaySelected?(selectedIndex)
     }
 }

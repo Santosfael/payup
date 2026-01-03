@@ -15,8 +15,6 @@ final class ClientFormViewController: UIViewController {
     private let clientViewModel = ClientFormViewModel()
     private var hasInitializedPosition = false
     private lazy var clientFormView = ClientFormView(mode: mode)
-    weak var delegate: CompanyListViewDelegate?
-    
 
     // MARK: - Initializeds
     init(mode: ClientFormMode) {
@@ -24,6 +22,10 @@ final class ClientFormViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .overFullScreen
         modalTransitionStyle = .coverVertical
+        
+        if case .edit(let client) = mode, let day = client.selectedDay {
+            viewModel.setSelectDay(day)
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -38,6 +40,7 @@ final class ClientFormViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         clientFormView.delegate = self
+        clientFormView.daySelectorView.delegate = self
         clientFormView.daySelectorView.configure(days: viewModel.days,
                                                  selectedIndex: viewModel.selectedIndex)
     }
@@ -80,8 +83,8 @@ extension ClientFormViewController: ClientFormViewDelegate {
         let success = clientViewModel.saveClient(client: client)
         
         if success {
+            NotificationCenter.default.post(name: .clientDataChanged, object: nil)
             dismiss(animated: true)
-            delegate?.didUpdateCompany()
         } else {
             showAlert(title: "Erro", message: "Não foi possível salvar os dados do cliente, tente novamente!")
         }
@@ -103,4 +106,18 @@ extension ClientFormViewController: ClientFormViewDelegate {
     func didTapCancel() {
         dismiss(animated: true)
     }
+}
+
+extension ClientFormViewController: DaySelectorViewDelegate {
+    func daySelectorView(_ view: DaySelectorView, didSelectDayAt index: Int) {
+        viewModel.setSelectDay(index)
+    }
+
+    func selectedDay() -> Int? {
+        return viewModel.getSelectedDay()
+    }
+}
+
+extension Notification.Name {
+    static let clientDataChanged = Notification.Name("clientDataChanged")
 }

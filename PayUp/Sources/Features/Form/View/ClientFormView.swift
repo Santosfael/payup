@@ -291,6 +291,8 @@ final class ClientFormView: UIView {
         if let selectedDay = client.selectedDay {
             daySelectorView.setSelectedDay(selectedDay)
         }
+        
+        daySelectorView.isHidden = !recurringSwitch.isOn
     }
     
     // MARK: - Objc private Methods
