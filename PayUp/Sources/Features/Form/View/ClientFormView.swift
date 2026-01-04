@@ -293,6 +293,8 @@ final class ClientFormView: UIView {
         }
         
         daySelectorView.isHidden = !recurringSwitch.isOn
+        frequencyButton.isHidden = !recurringSwitch.isOn
+        
     }
     
     // MARK: - Objc private Methods

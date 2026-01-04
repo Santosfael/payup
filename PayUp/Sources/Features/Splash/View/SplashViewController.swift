@@ -5,13 +5,13 @@
 //  Created by Rafael on 22/12/25.
 //
 
-import Foundation
 import UIKit
 
 final class SplashViewController: UIViewController {
     private let viewModel: SplashViewModel
     private let splashView = SplashView()
-    
+
+    // MARK: - Initializeds
     init(viewModel: SplashViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -20,7 +20,8 @@ final class SplashViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    // MARK: - Life cycle
     override func loadView() {
         view = splashView
         startAnimation()
@@ -29,7 +30,8 @@ final class SplashViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
+
+    // MARK: - Private Methods
     private func startAnimation() {
         splashView.triangleImageView.transform = CGAffineTransform(scaleX: 2.5, y: 2.5)
         
@@ -46,8 +48,20 @@ final class SplashViewController: UIViewController {
                     self.splashView.logoImageView.alpha = 1
                 } completion: { _ in
                     self.viewModel.onAnimationCompleted?()
+                    self.promptForFaceID()
                 }
             })
+        }
+    }
+
+    private func promptForFaceID() {
+        AuthenticationManager.shared.authenticateUser { success, error in
+            if success {
+                let controller = HomeViewController()
+                self.navigationController?.present(controller, animated: true)
+            } else {
+                print("Erro de autenticação: \(error ?? "Desconhecido")")
+            }
         }
     }
 }
