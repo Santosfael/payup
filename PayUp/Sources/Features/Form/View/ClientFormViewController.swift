@@ -20,8 +20,8 @@ final class ClientFormViewController: UIViewController {
     init(mode: ClientFormMode) {
         self.mode = mode
         super.init(nibName: nil, bundle: nil)
-        modalPresentationStyle = .overFullScreen
-        modalTransitionStyle = .coverVertical
+        //modalPresentationStyle = .overFullScreen
+        //modalTransitionStyle = .coverVertical
         
         if case .edit(let client) = mode, let day = client.selectedDay {
             viewModel.setSelectDay(day)
@@ -39,6 +39,7 @@ final class ClientFormViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.isHidden = true
         clientFormView.delegate = self
         clientFormView.daySelectorView.delegate = self
         clientFormView.daySelectorView.configure(days: viewModel.days,

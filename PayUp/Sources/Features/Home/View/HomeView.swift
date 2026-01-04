@@ -8,9 +8,9 @@
 import UIKit
 
 final class HomeView: UIView {
-
-    // MARK: - Clousure
-    var onTapAddClient: (() -> Void)?
+    
+    // MARK: - Delegate
+    weak var delegate: HomeViewDelegate?
     
     // MARK: - UI Components
     private let scrollView: UIScrollView = {
@@ -111,7 +111,7 @@ final class HomeView: UIView {
         return paymentCardView
     }()
     
-    private let addClientsButton: UIButton = {
+    private lazy var addClientsButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Adicionar Cliente", for: .normal)
@@ -237,7 +237,7 @@ final class HomeView: UIView {
     }
 
     @objc private func didTapAddClient() {
-        onTapAddClient?()
+        delegate?.didTapAddNewClient()
     }
 
     internal func setCompanyListDelegate(_ delegate: CompanyListViewDelegate) {

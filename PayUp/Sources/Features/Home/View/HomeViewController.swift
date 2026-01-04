@@ -37,13 +37,7 @@ final class HomeViewController: UIViewController {
         homeView.daySelectorView.configure(days: viewModel.days,
                                              selectedIndex: viewModel.selectedIndex)
         homeView.companyListView.delegate = self
-        homeView.onTapAddClient = { [weak self] in
-            guard self != nil else { return }
-            let formViewController = ClientFormViewController(mode: .add)
-            formViewController.modalTransitionStyle = .coverVertical
-            formViewController.modalPresentationStyle = .overFullScreen
-            self?.present(formViewController, animated: true)
-        }
+        homeView.delegate = self
     }
 
     private func setupCompanyListDelegate() {
@@ -77,15 +71,48 @@ extension HomeViewController: DaySelectorViewDelegate {
     }
 }
 
+// MARK: - Extension Custom Delegate HomeView
+extension HomeViewController: HomeViewDelegate {
+    func didTapAddNewClient() {
+        let formViewController = ClientFormViewController(mode: .add)
+        let navigationController = UINavigationController(rootViewController: formViewController)
+        
+        formViewController.modalPresentationStyle = .pageSheet
+        if let sheet = navigationController.sheetPresentationController {
+            sheet.detents = [
+                .custom(resolver: { context in
+                    return context.maximumDetentValue * 0.95
+                })
+            ]
+            sheet.prefersGrabberVisible = true
+            sheet.preferredCornerRadius = 16
+        }
+        
+         present(navigationController, animated: true)
+    }
+}
+
 extension HomeViewController: CompanyListViewDelegate {
 
     func didSelectCompany(_ company: CompanyItemModel) {
         guard let client =  homeViewModel.getClient(company.name) else { return }
         
         let formViewController = ClientFormViewController(mode: .edit(client))
-        formViewController.modalTransitionStyle = .coverVertical
-        formViewController.modalPresentationStyle = .overFullScreen
-        self.present(formViewController, animated: true)
+        let navigationController = UINavigationController(rootViewController: formViewController)
+        
+        formViewController.modalPresentationStyle = .pageSheet
+        if let sheet = navigationController.sheetPresentationController {
+            sheet.detents = [
+                .custom(resolver: { context in
+                    return context.maximumDetentValue * 0.95
+                })
+            ]
+            sheet.prefersGrabberVisible = true
+            sheet.preferredCornerRadius = 16
+        }
+        
+         present(navigationController, animated: true)
+        
     }
 
     func numberOfCompanies(in view: CompanyListView) -> Int {

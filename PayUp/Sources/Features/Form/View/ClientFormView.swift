@@ -352,10 +352,10 @@ extension ClientFormView: ViewCodeProtocol {
 
     func setupConstraints() {
         NSLayoutConstraint.activate([
+            containerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 24),
             containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
             containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            containerView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.8),
             
             scrollView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
             scrollView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
